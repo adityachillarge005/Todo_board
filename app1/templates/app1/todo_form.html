@@ -1,0 +1,17 @@
+{% extends 'app1/base.html' %}
+
+{% block content %}
+
+<section class="panel form-panel">
+    <h2>Add Todo</h2>
+
+    <form method="POST" class="todo-form">
+        {% csrf_token %}
+
+        {{ form.errors }}
+        {{ form.as_p }}
+        <button type="submit" class="button button-primary">Save</button>
+    </form>
+</section>
+
+{% endblock %}

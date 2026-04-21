@@ -1,0 +1,25 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Todo list</title>
+    {% now "U" as css_version %}
+    <link rel="stylesheet" href="{% static 'app1/styles.css' %}?v={{ css_version }}">
+</head>
+<body>
+<div class="page-shell">
+    {% if user.is_authenticated %}
+        <form action="{% url 'logout' %}" method="POST" class="logout-corner">
+            {% csrf_token %}
+            <button type="submit" class="button button-ghost">Logout</button>
+        </form>
+    {% endif %}
+
+    <main>
+        {% block content %}{% endblock %}
+    </main>
+</div>
+</body>
+</html>

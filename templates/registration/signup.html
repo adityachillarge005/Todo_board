@@ -1,0 +1,15 @@
+{% extends 'app1/base.html' %}
+
+{% block content %}
+<section class="panel auth-panel signup-panel">
+    <h2>Signup</h2>
+
+    <form method="POST" class="auth-form">
+        {% csrf_token %}
+
+        {{ form.errors }}
+        {{ form.as_p }}
+        <button type="submit" class="button button-primary">Signup</button>
+    </form>
+</section>
+{% endblock %}

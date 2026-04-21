@@ -1,0 +1,137 @@
+{% extends 'app1/base.html' %}
+
+{% block content %}
+
+<h1 class="todo-mini-title">Todo Board</h1>
+
+<a href="{% url 'add_todo' %}" class="add-btn">+ Add Todo</a>
+
+<!-- 🔍 SEARCH -->
+<form method="GET" style="margin-bottom: 15px;">
+    <input type="text" name="search" placeholder="Search todos..."
+           value="{{ request.GET.search }}">
+
+    <!-- preserve priority -->
+    {% if request.GET.priority %}
+        <input type="hidden" name="priority" value="{{ request.GET.priority }}">
+    {% endif %}
+
+    <button type="submit">Search</button>
+</form>
+
+<!-- 🎯 FILTER BUTTONS -->
+<div style="margin-bottom: 15px;">
+    <a href="/" class="button">All</a>
+
+    <a href="/?priority=H&search={{ request.GET.search }}" class="button">
+        🔴 High
+    </a>
+
+    <a href="/?priority=M&search={{ request.GET.search }}" class="button">
+        🟡 Medium
+    </a>
+
+    <a href="/?priority=L&search={{ request.GET.search }}" class="button">
+        🟢 Low
+    </a>
+</div>
+
+<div class="container">
+
+    <!-- Pending -->
+    <div class="section">
+        <h2 class="pending">Pending</h2>
+
+        {% for todo in pending_todos %}
+        <div class="card">
+
+            <strong>{{ todo.title }}</strong>
+
+            <!-- PRIORITY -->
+            <div class="prior">
+                {% if todo.priority == 'H' %}
+                    <span style="color:red; font-weight:bold;">🔴 High</span>
+                {% elif todo.priority == 'M' %}
+                    <span style="color:orange; font-weight:bold;">🟡 Medium</span>
+                {% else %}
+                    <span style="color:green; font-weight:bold;">🟢 Low</span>
+                {% endif %}
+            </div>
+
+            <!-- DUE DATE -->
+            {% if todo.due_date %}
+                <div class="due">
+                    {% if todo.due_date < today %}
+                        <span class="overdue">⚠ Overdue: {{ todo.due_date }}</span>
+                    {% elif todo.due_date == today %}
+                        <span class="today">📅 Due Today</span>
+                    {% else %}
+                        <span class="future">📅 Due: {{ todo.due_date }}</span>
+                    {% endif %}
+                </div>
+            {% endif %}
+
+            <!-- ACTIONS -->
+            <div class="actions">
+                <a href="{% url 'update_todo' todo.id %}">Edit</a>
+                <a href="{% url 'delete_todo' todo.id %}">Delete</a>
+                <a href="{% url 'toggle_complete' todo.id %}">Mark Done</a>
+            </div>
+
+        </div>
+        {% empty %}
+            <p>No pending todos</p>
+        {% endfor %}
+    </div>
+
+    <!-- Completed -->
+    <div class="section">
+        <h2 class="completed">Completed</h2>
+
+        {% for todo in completed_todos %}
+        <div class="card done">
+
+            <strong style="text-decoration:line-through;">
+                {{ todo.title }}
+            </strong>
+
+            <!-- PRIORITY -->
+            <div class="prior">
+                {% if todo.priority == 'H' %}
+                    <span style="color:red; font-weight:bold;">🔴 High</span>
+                {% elif todo.priority == 'M' %}
+                    <span style="color:orange; font-weight:bold;">🟡 Medium</span>
+                {% else %}
+                    <span style="color:green; font-weight:bold;">🟢 Low</span>
+                {% endif %}
+            </div>
+
+            <!-- DUE DATE -->
+            {% if todo.due_date %}
+                <div class="due">
+                    {% if todo.due_date < today %}
+                        <span class="overdue">⚠ Overdue: {{ todo.due_date }}</span>
+                    {% elif todo.due_date == today %}
+                        <span class="today">📅 Due Today</span>
+                    {% else %}
+                        <span class="future">📅 Due: {{ todo.due_date }}</span>
+                    {% endif %}
+                </div>
+            {% endif %}
+
+            <!-- ACTIONS -->
+            <div class="actions">
+                <a href="{% url 'update_todo' todo.id %}">Edit</a>
+                <a href="{% url 'delete_todo' todo.id %}">Delete</a>
+                <a href="{% url 'toggle_complete' todo.id %}">Mark Pending</a>
+            </div>
+
+        </div>
+        {% empty %}
+            <p>No completed todos</p>
+        {% endfor %}
+    </div>
+
+</div>
+
+{% endblock %}
