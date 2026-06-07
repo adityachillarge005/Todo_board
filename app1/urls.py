@@ -1,5 +1,7 @@
 from django.urls import path
 from .import views 
+from .views import TodoList
+from .views import TodoListCreate
 
 urlpatterns = [
     path('',views.todo_list,name="Todo_list"),
@@ -8,4 +10,6 @@ urlpatterns = [
     path('update/<int:id>',views.update_todo,name="update_todo"),
     path('toggle/<int:id>/',views.toggle_complete,name='toggle_complete'),
     path('signup/',views.signup,name='signup'),
+    path('todos/',TodoListCreate.as_view()),
 ]
+
